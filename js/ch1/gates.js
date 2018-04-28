@@ -26,9 +26,10 @@ function MUX(x, y, sel) {
 }
 
 function DMUX(input, sel) {
-  // todo: get this gate working
-  const [ x, y ] = sel ? [ 0, input ] : [ input, 0];
-  return {x, y};
+  return {
+    x: AND(input, NOT(sel)),
+    y: AND(input, sel)
+  };
 }
 
 // todo: multis

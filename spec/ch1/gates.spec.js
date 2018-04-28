@@ -50,7 +50,9 @@ function demuxTest() {
     tables.DMUX.forEach(row => {
       const {input, sel, x, y} = row;
       it(`${input}, ${sel} -> ${x}, ${y}`, () => {
-        expect(gates.DMUX(input, sel)).toEqual({x, y});
+        const output = gates.DMUX(input, sel);
+        expect(output.x).toBe(Boolean(x));
+        expect(output.y).toBe(Boolean(y));
       });
     });    
   }
