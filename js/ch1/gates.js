@@ -20,9 +20,7 @@ function XOR(x, y) {
 }
 
 function MUX(x, y, sel) {
-  // todo: get this gate working
-  // return OR(NOT(AND(x, sel)), AND(y, sel));
-  return Boolean(sel ? y : x);
+  return OR(AND(x, NOT(sel)), AND(y, sel));
 }
 
 function DMUX(input, sel) {
