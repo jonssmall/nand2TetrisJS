@@ -8,13 +8,15 @@ describe("OR gates", binaryTest(gates.OR, tables.OR));
 describe("XOR gates", binaryTest(gates.XOR, tables.XOR));
 describe("MUX gates", muxTest());
 describe("DMUX gates", demuxTest());
+describe("Multi-Bit NOT gates", multiBitNotTest());
+describe("Multi-Bit AND gates", multiBitAndTest());
 
 // wrapper for truth tables with 2 inputs and 1 output: AND, OR, XOR, NAND
 function binaryTest(gateFunc, table) {
-  return function() {
+  return () => {
     table.forEach(row => {
       const {x, y, out} = row;
-      it(`${x}, ${y} -> ${out}`, function() {
+      it(`${x}, ${y} -> ${out}`, () => {
         expect(gateFunc(x, y)).toBe(Boolean(out));
       });
     });    
@@ -55,5 +57,26 @@ function demuxTest() {
         expect(output.y).toBe(Boolean(y));
       });
     });    
+  }
+}
+
+function multiBitNotTest() {
+  return () => {
+    it("Applies NOT to a bus of inputs", () => {
+      const inputArray = [1,0,0,1,1,0,1];
+      const outputArray = gates.multiBitNOT(inputArray);
+      expect(inputArray.length).toBe(outputArray.length);
+      inputArray.forEach(i => {
+        expect(Boolean(inputArray[i])).toBe(!(outputArray[i]));
+      });
+    });
+  }
+}
+
+function multiBitAndTest() {
+  return () => {
+    it("Applies AND to a bus of inputs", () => {
+      expect(gates.multiBitAND(tables.AND)).toEqual(tables.AND.map(r => Boolean(r.out)));
+    });
   }
 }

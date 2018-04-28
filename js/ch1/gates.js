@@ -30,8 +30,36 @@ function DMUX(input, sel) {
   };
 }
 
+function multiBitNOT(inputArray) {
+ return inputArray.map(i => NOT(i));
+}
+
+function multiBitAND(inputArray) { // [{x:0, y:0}, {x:1, y:0}, ...]
+  return inputArray.map(i => AND(i.x, i.y));
+}
+
+function multiBitOR() {
+
+}
+
+function multiBitMUX() {
+
+}
+
+function multiWayOR() {
+
+}
+
+function multiWayMUX() {
+  
+}
+
+function multiWayDMUX() {
+  
+}
+
 // todo: multis
 
 module.exports = {
-  NAND, NOT, AND, OR, XOR, MUX, DMUX
+  NAND, NOT, AND, OR, XOR, MUX, DMUX, multiBitNOT, multiBitAND
 };
