@@ -20,11 +20,15 @@ function XOR(x, y) {
 }
 
 function MUX(x, y, sel) {
-  return OR(NOT(AND(x, sel)), AND(y, sel));
+  // todo: get this gate working
+  // return OR(NOT(AND(x, sel)), AND(y, sel));
+  return Boolean(sel ? y : x);
 }
 
-function DMUX(x, y, sel) {
-  
+function DMUX(input, sel) {
+  // todo: get this gate working
+  const [ x, y ] = sel ? [ 0, input ] : [ input, 0];
+  return {x, y};
 }
 
 // todo: multis
