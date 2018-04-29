@@ -49,6 +49,24 @@ const DMUX = [
   {input: 1, sel: 1, x: 0, y: 1}
 ];
 
+const fourWayMUX = [
+  {sel1: 0, sel0: 0, out: "a"},
+  {sel1: 0, sel0: 1, out: "b"},
+  {sel1: 1, sel0: 0, out: "c"},
+  {sel1: 1, sel0: 1, out: "d"}
+];
+
+const eightWayMUX = [
+  {sel2: 0, sel1: 0, sel0: 0, out: "a"},
+  {sel2: 0, sel1: 0, sel0: 1, out: "b"},
+  {sel2: 0, sel1: 1, sel0: 0, out: "c"},
+  {sel2: 0, sel1: 1, sel0: 1, out: "d"},
+  {sel2: 1, sel1: 0, sel0: 0, out: "e"},
+  {sel2: 1, sel1: 0, sel0: 1, out: "f"},
+  {sel2: 1, sel1: 1, sel0: 0, out: "g"},
+  {sel2: 1, sel1: 1, sel0: 1, out: "h"}
+];
+
 module.exports = {
-  NAND, NOT, AND, OR, XOR, MUX, DMUX
+  NAND, NOT, AND, OR, XOR, MUX, DMUX, fourWayMUX, eightWayMUX
 };

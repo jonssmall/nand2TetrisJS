@@ -38,11 +38,11 @@ function multiBitAND(inputArray) { // [{x:0, y:0}, {x:1, y:0}, ...]
   return inputArray.map(i => AND(i.x, i.y));
 }
 
-function multiBitOR(inputArray) {
+function multiBitOR(inputArray) { // [{x:0, y:0}, {x:1, y:0}, ...]
   return inputArray.map(i => OR(i.x, i.y));
 }
 
-function multiBitMUX(inputArray, sel) {
+function multiBitMUX(inputArray, sel) { // [{x:0, y:0}, {x:1, y:0}, ...]
   return inputArray.map(i => MUX(i.x, i.y, sel));
 }
 
@@ -51,14 +51,37 @@ function multiWayOR(inputArray) {
   return inputArray.some(i => i);
 }
 
-function multiWayMUX() {
+// input is 4 multi-bit arrays and 2 selectors, 
+//    must be converted into object notation for inner MUX calls
+// todo: is the inconsistent input structure acceptable between here and MUX?
+function FourWayMUX(inA, inB, inC, inD, sel1, sel0) {
+  const objAB = objConverter(inA, inB);
+  const objCD = objConverter(inC, inD);
+  const aOrB = multiBitMUX(objAB, sel0);
+  const cOrD = multiBitMUX(objCD, sel0);
+  return multiBitMUX(objConverter(aOrB, cOrD), sel1);
+}
+
+function EightWayMUX(inA, inB, inC, inD, inE, inF, inG, inH, sel2, sel1, sel0) {
+  return multiBitMUX(objConverter(FourWayMUX(inA, inB, inC, inD, sel1, sel0), FourWayMUX(inE, inF, inG, inH, sel1, sel0)), sel2);
+}
+
+function FourWayDMUX() {
   
 }
 
-function multiWayDMUX() {
+function EightWayDMUX() {
   
+}
+
+function objConverter(arr1, arr2) {
+  return arr1.map((e, i) => {
+    return {x: e, y: arr2[i]};
+  });
 }
 
 module.exports = {
-  NAND, NOT, AND, OR, XOR, MUX, DMUX, multiBitNOT, multiBitAND, multiWayOR
+  NAND, NOT, AND, OR, XOR, MUX, DMUX, multiBitNOT, 
+  multiBitAND, multiBitMUX, multiWayOR, FourWayMUX,
+  EightWayMUX, FourWayDMUX, EightWayDMUX
 };
