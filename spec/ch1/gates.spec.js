@@ -10,6 +10,9 @@ describe("MUX gates", muxTest());
 describe("DMUX gates", demuxTest());
 describe("Multi-Bit NOT gates", multiBitNotTest());
 describe("Multi-Bit AND gates", multiBitAndTest());
+describe("Multi-Way OR gates", multiWayOrTest());
+// describe("Multi-Way AND gates", multiBitAndTest());
+// describe("Multi-Way AND gates", multiBitAndTest());
 
 // wrapper for truth tables with 2 inputs and 1 output: AND, OR, XOR, NAND
 function binaryTest(gateFunc, table) {
@@ -77,6 +80,17 @@ function multiBitAndTest() {
   return () => {
     it("Applies AND to a bus of inputs", () => {
       expect(gates.multiBitAND(tables.AND)).toEqual(tables.AND.map(r => Boolean(r.out)));
+    });
+  }
+}
+
+function multiWayOrTest() {
+  return () => {
+    it("Returns true when at least one input in bus is true", () => {
+      expect(gates.multiWayOR([0,0,0,1])).toBe(true);
+    });
+    it("Returns false when no input in bus is true", () => {
+      expect(gates.multiWayOR([0,0,0,0])).toBe(false);
     });
   }
 }

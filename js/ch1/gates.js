@@ -38,16 +38,17 @@ function multiBitAND(inputArray) { // [{x:0, y:0}, {x:1, y:0}, ...]
   return inputArray.map(i => AND(i.x, i.y));
 }
 
-function multiBitOR() {
-
+function multiBitOR(inputArray) {
+  return inputArray.map(i => OR(i.x, i.y));
 }
 
-function multiBitMUX() {
-
+function multiBitMUX(inputArray, sel) {
+  return inputArray.map(i => MUX(i.x, i.y, sel));
 }
 
-function multiWayOR() {
-
+function multiWayOR(inputArray) {
+  //todo: do as gates, revisit data structure & test
+  return inputArray.some(i => i);
 }
 
 function multiWayMUX() {
@@ -58,8 +59,6 @@ function multiWayDMUX() {
   
 }
 
-// todo: multis
-
 module.exports = {
-  NAND, NOT, AND, OR, XOR, MUX, DMUX, multiBitNOT, multiBitAND
+  NAND, NOT, AND, OR, XOR, MUX, DMUX, multiBitNOT, multiBitAND, multiWayOR
 };
