@@ -66,13 +66,35 @@ function EightWayMUX(inA, inB, inC, inD, inE, inF, inG, inH, sel2, sel1, sel0) {
   return multiBitMUX(objConverter(FourWayMUX(inA, inB, inC, inD, sel1, sel0), FourWayMUX(inE, inF, inG, inH, sel1, sel0)), sel2);
 }
 
-function FourWayDMUX() {
+function FourWayDMUX(input, sel1, sel0) {
+  const temp = DMUX(input, sel0);
+  const [t1, t2] = [temp.x, temp.y];
   
+  return {
+    a: AND(t1, NOT(sel1)),
+    b: AND(t2, NOT(sel1)),
+    c: AND(t1, sel1),
+    d: AND(t2, sel1)
+  };
 }
 
-function EightWayDMUX() {
+function EightWayDMUX(input, sel2, sel1, sel0) {
+  const temp = FourWayDMUX(input, sel1, sel0);
+  const [t1, t2, t3, t4] = [temp.a, temp.b, temp.c, temp.d];
   
+  return {
+    a: AND(t1, NOT(sel2)),
+    b: AND(t2, NOT(sel2)),
+    c: AND(t3, NOT(sel2)),
+    d: AND(t4, NOT(sel2)),
+    e: AND(t1, sel2),
+    f: AND(t2, sel2),
+    g: AND(t3, sel2),
+    h: AND(t4, sel2),
+  };
 }
+
+console.log(EightWayDMUX(1, 0, 0, 1));
 
 function objConverter(arr1, arr2) {
   return arr1.map((e, i) => {

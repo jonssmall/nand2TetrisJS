@@ -14,8 +14,8 @@ describe("Multi-Bit MUX gates", multiBitMuxTest());
 describe("Multi-Way OR gates", multiWayOrTest());
 describe("Four-Way MUX gates", fourWayMuxTest());
 describe("Eight-Way MUX gates", eightWayMuxTest());
-// describe("Four-Way DMUX gates", multiBitAndTest());
-// describe("Eight-Way DMUX gates", multiBitAndTest());
+describe("Four-Way DMUX gates", fourWayDmuxTest());
+describe("Eight-Way DMUX gates", eightWayDmuxTest());
 
 // wrapper for truth tables with 2 inputs and 1 output: AND, OR, XOR, NAND
 function binaryTest(gateFunc, table) {
@@ -151,5 +151,57 @@ function eightWayMuxTest() {
               .toEqual(ins[row.out].map(i => Boolean(i)));
       });
     });
+  }
+}
+
+function fourWayDmuxTest() {
+  const truth = [
+    [0,0,"a"],
+    [0,1,"b"],
+    [1,0,"c"],
+    [1,1,"d"]
+  ];
+  return () => {
+    truth.forEach(row => {
+      // input of 1, one true 3 falses
+      it(`in 1, sel[1] ${row[0]} sel[0] ${row[1]} -> ${row[2]}`, () => {
+        const outSkeleton = {a: false, b: false, c: false, d: false};
+        outSkeleton[row[2]] = true;
+        expect(gates.FourWayDMUX(1, row[0], row[1])).toEqual(outSkeleton);
+      });
+      // input of 0, will be false across
+      it(`in 0, sel[1] ${row[0]} sel[0] ${row[1]} -> ${row[2]}`, () => {
+        const outSkeleton = {a: false, b: false, c: false, d: false};
+        expect(gates.FourWayDMUX(0, row[0], row[1])).toEqual(outSkeleton);
+      });
+    })
+  }
+}
+
+function eightWayDmuxTest() {
+  const truth = [
+    [0,0,0,"a"],
+    [0,0,1,"b"],
+    [0,1,0,"c"],
+    [0,1,1,"d"],
+    [1,0,0,"e"],
+    [1,0,1,"f"],
+    [1,1,0,"g"],
+    [1,1,1,"h"]
+  ];
+  return () => {
+    truth.forEach(row => {
+      // input of 1, one true 7 falses
+      it(`in 1, sel[2] ${row[0]} sel[1] ${row[1]} sel[0] ${row[2]} -> ${row[3]}`, () => {
+        const outSkeleton = {a: false, b: false, c: false, d: false, e: false, f: false, g: false, h: false};
+        outSkeleton[row[3]] = true;
+        expect(gates.EightWayDMUX(1, row[0], row[1], row[2])).toEqual(outSkeleton);
+      });
+      // input of 0, will be false across
+      it(`in 0, sel[2] ${row[0]} sel[1] ${row[1]} sel[0] ${row[2]} -> ${row[3]}`, () => {        
+        const outSkeleton = {a: false, b: false, c: false, d: false, e: false, f: false, g: false, h: false};
+        expect(gates.EightWayDMUX(0, row[0], row[1], row[2])).toEqual(outSkeleton);
+      });
+    })
   }
 }
