@@ -94,8 +94,6 @@ function EightWayDMUX(input, sel2, sel1, sel0) {
   };
 }
 
-console.log(EightWayDMUX(1, 0, 0, 1));
-
 function objConverter(arr1, arr2) {
   return arr1.map((e, i) => {
     return {x: e, y: arr2[i]};
