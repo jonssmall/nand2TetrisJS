@@ -82,13 +82,13 @@ function ALUtest() {
     {zx: 0, nx: 1, zy: 0, ny: 1, f: 0, no: 1, fn: (x,y) => x | y, out: 'x OR y'}
   ];
   return () => {
-    const x = [0,0,1,0] // 4
-    const y = [1,1,1,0] // 7
-
+    const x = [0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0]; // 30840
+    const y = [0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0]; // 88
+    
     truth.forEach(row => {
       it(`${row.out}`, () => {
         const output = chips.ALU(x, y, row.zx, row.nx, row.zy, row.ny, row.f, row.no);        
-        expect(arr2Bin(output.out)).toBe(row.fn(4, 7));
+        expect(arr2SignedInt(output.out)).toBe(row.fn(30840, 88));
       });
     });
   }
@@ -108,6 +108,13 @@ function binaryStringToInteger(str) {
   return parseInt(str, 2);
 }
 
-function arr2Bin(arr) {
+function arr2Int(arr) {
   return binaryStringToInteger(arrayToBinaryString(arr));
+}
+
+// requires 16 bit input
+function arr2SignedInt(arr) {
+  if (arr.length !== 16) throw error('ALU requres 16 bit input length');
+  const [ signed ] = new Int16Array([`0b${arrayToBinaryString(arr)}`]);
+  return signed;
 }
