@@ -3,6 +3,7 @@ const chips = require("../../js/ch2/chips");
 describe("Half-Adder Chip", halfAdderTest());
 describe("Full-Adder Chip", fullAdderTest());
 describe("16-bit Adder Chip", adder16Test());
+describe("ALU Chip", ALUtest());
 
 function halfAdderTest() {
   const truth = [
@@ -57,4 +58,56 @@ function adder16Test() {
       expect(chips.adder16(inA3, inB3)).toBe(res3);
     });
   }
+}
+
+function ALUtest() {
+  const truth = [
+    {zx: 1, nx: 0, zy: 1, ny: 0, f: 1, no: 0, fn: (x,y) => 0, out: '0'},
+    {zx: 1, nx: 1, zy: 1, ny: 1, f: 1, no: 1, fn: (x,y) => 1, out: '1'},
+    {zx: 1, nx: 1, zy: 1, ny: 0, f: 1, no: 0, fn: (x,y) => -1, out: '-1'},
+    {zx: 0, nx: 0, zy: 1, ny: 1, f: 0, no: 0, fn: (x,y) => x, out: 'x'},
+    {zx: 1, nx: 1, zy: 0, ny: 0, f: 0, no: 0, fn: (x,y) => y, out: 'y'},
+    {zx: 0, nx: 0, zy: 1, ny: 1, f: 0, no: 1, fn: (x,y) => ~x, out: 'NOT x'},
+    {zx: 1, nx: 1, zy: 0, ny: 0, f: 0, no: 1, fn: (x,y) => ~y, out: 'NOT y'},
+    {zx: 0, nx: 0, zy: 1, ny: 1, f: 1, no: 1, fn: (x,y) => -x, out: '-x'},
+    {zx: 1, nx: 1, zy: 0, ny: 0, f: 1, no: 1, fn: (x,y) => -y, out: '-y'},
+    {zx: 0, nx: 1, zy: 1, ny: 1, f: 1, no: 1, fn: (x,y) => ++x, out: 'x + 1'},
+    {zx: 1, nx: 1, zy: 0, ny: 1, f: 1, no: 1, fn: (x,y) => ++y, out: 'y + 1'},
+    {zx: 0, nx: 0, zy: 1, ny: 1, f: 1, no: 0, fn: (x,y) => --x, out: 'x - 1'},
+    {zx: 1, nx: 1, zy: 0, ny: 0, f: 1, no: 0, fn: (x,y) => --y, out: 'y - 1'},
+    {zx: 0, nx: 0, zy: 0, ny: 0, f: 1, no: 0, fn: (x,y) => x + y, out: 'x + y'},
+    {zx: 0, nx: 1, zy: 0, ny: 0, f: 1, no: 1, fn: (x,y) => x - y, out: 'x - y'},
+    {zx: 0, nx: 0, zy: 0, ny: 1, f: 1, no: 1, fn: (x,y) => y - x, out: 'y - x'},
+    {zx: 0, nx: 0, zy: 0, ny: 0, f: 0, no: 0, fn: (x,y) => x & y, out: 'x AND y'},
+    {zx: 0, nx: 1, zy: 0, ny: 1, f: 0, no: 1, fn: (x,y) => x | y, out: 'x OR y'}
+  ];
+  return () => {
+    const x = [0,0,1,0] // 4
+    const y = [1,1,1,0] // 7
+
+    truth.forEach(row => {
+      it(`${row.out}`, () => {
+        const output = chips.ALU(x, y, row.zx, row.nx, row.zy, row.ny, row.f, row.no);        
+        expect(arr2Bin(output.out)).toBe(row.fn(4, 7));
+      });
+    });
+  }
+}
+
+// in: [false, true, false, true, true]
+// out: 11010
+function arrayToBinaryString(arr) {
+  return arr.reverse().reduce((acc, e) => {
+    return acc + (e ? '1' : '0');
+  }, '');
+}
+
+// in: 11010
+// out: 26
+function binaryStringToInteger(str) {
+  return parseInt(str, 2);
+}
+
+function arr2Bin(arr) {
+  return binaryStringToInteger(arrayToBinaryString(arr));
 }

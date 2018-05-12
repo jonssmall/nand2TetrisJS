@@ -49,6 +49,43 @@ function adder16(inA, inB) {
   }
 }
 
+function inc16(inA) {
+  return adder16(inA, "0000000000000001");
+}
+
+/*
+  inputs:
+    16 bit x
+    16 bit y
+    zx: if 1 set x to 00000...
+    nx: if 1 negate x e.g. 010 -> 101
+    zy, ny: same for y
+    f: if 0 -> y AND x; if 1 -> y + x
+    no: if 1 negate output
+  outputs: 
+    out: 16 bit result
+    zr: 1 if out 0
+    ng: 1 if out negative
+*/
+function ALU(inX, inY, zx, nx, zy, ny, f, no) {
+  const x1 = gates.multiBitMUX(inX.map(i => ({x: i, y: 0})), zx);
+  const x2 = nx ? gates.multiBitNOT(x1) : x1;
+  // console.log('x2', x2);
+
+  // multiBitMUX expects uniform input [{x: ..., y: ...}, ...], required to map y as x here.
+  const y1 = gates.multiBitMUX(inY.map(i => ({x: i, y: 0})), zy);
+  const y2 = ny ? gates.multiBitNOT(y1) : y1;
+  // console.log('y2', y2);
+
+  const combined = f ? adderN(x2, y2).map(e => e.sum) : gates.multiBitAND(x2.map((e, i) => ({x: e, y: y2[i]})));
+  const out = no ? gates.multiBitNOT(combined) : combined;
+  return {
+    out,
+    zr: out.every(e => !e), // true if all elements false
+    ng: out[out.length - 1] // last element true if negative
+  };
+}
+
 module.exports = {
-  halfAdder, fullAdder, adder16
+  halfAdder, fullAdder, adder16, inc16, ALU
 };
